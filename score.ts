@@ -122,6 +122,8 @@ export async function saveReview(event: PullRequestReviewSubmittedEvent) {
       score,
     })
     .setOnInsert({
+      pr_url: pull_request.html_url,
+      reviewer,
       author,
     })
     .upsert(true)
