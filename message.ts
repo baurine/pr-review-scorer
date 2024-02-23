@@ -3,6 +3,7 @@ import {
   PullRequestAssignedEvent,
   PullRequestClosedEvent,
   PullRequestEvent,
+  PullRequestLabeledEvent,
   PullRequestOpenedEvent,
   PullRequestReopenedEvent,
   PullRequestReviewEvent,
@@ -36,7 +37,7 @@ export function getTypes(data: PullRequest) {
 }
 
 export function getScore(data: PullRequest) {
-  let score = 0.5;
+  let score = 0.0;
   const types = getTypes(data);
   if (types.includes('epic')) {
     score = 3.0;
@@ -110,6 +111,16 @@ class PullRequestHandlers {
     const score = getTypeAndScore(pull_request);
 
     return [title, text, score].join('\n');
+  }
+
+  labeled(event: PullRequestLabeledEvent) {
+    const { repository, sender, pull_request } = event;
+    const title = `${getRepoName(
+      repository
+    )}: pull request labeled by ${getUserName(sender)}`;
+    const score = getTypeAndScore(pull_request);
+
+    return [title, score].join('\n');
   }
 
   reviewRequested(event: PullRequestReviewRequestedEvent) {
@@ -195,10 +206,12 @@ export function pullRequest(event: PullRequestEvent) {
       return pr.opened(event);
     case 'reopened':
       return pr.reopened(event);
-    case 'review_requested':
-      return pr.reviewRequested(event);
-    case 'review_request_removed':
-      return pr.reviewRequestRemoved(event);
+    case 'labeled':
+      return pr.labeled(event);
+    // case 'review_requested':
+    //   return pr.reviewRequested(event);
+    // case 'review_request_removed':
+    //   return pr.reviewRequestRemoved(event);
     default:
       return;
   }

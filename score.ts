@@ -94,6 +94,11 @@ export async function saveReview(event: PullRequestReviewSubmittedEvent) {
   const { repository, sender, pull_request, review } = event;
 
   const reviewer = sender.login;
+  const author = pull_request.user.login;
+  if (reviewer === author) {
+    return ''
+  }
+  
   // step 1, find reviewer
   const r = await scoresTable.where({ name_in_github: reviewer }).findOne();
   if (!r) {
@@ -103,7 +108,7 @@ export async function saveReview(event: PullRequestReviewSubmittedEvent) {
   const preExtraScore = r.extra_score;
 
   // step 2, insert or update review record
-  const author = pull_request.user.login;
+  // const author = pull_request.user.login;
   const types = getTypes(pull_request as any);
   const score = getScore(pull_request as any);
   await reviewsTable
