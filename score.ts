@@ -19,8 +19,8 @@ import {
 } from '@octokit/webhooks-types';
 import { getScore, getTypes } from './message';
 
-const scoresTable = aircode.db.table('scores');
-const reviewsTable = aircode.db.table('reviews');
+export const scoresTable = aircode.db.table('scores');
+export const reviewsTable = aircode.db.table('reviews');
 
 async function initScores() {
   const c = await scoresTable.where().find();
@@ -93,12 +93,16 @@ export async function listScores() {
 export async function saveReview(event: PullRequestReviewSubmittedEvent) {
   const { repository, sender, pull_request, review } = event;
 
+  // skip merged pr
+  if (pull_request.merged_at !== null) {
+    return ''
+  }
   const reviewer = sender.login;
   const author = pull_request.user.login;
   if (reviewer === author) {
     return ''
   }
-  
+ 
   // step 1, find reviewer
   const r = await scoresTable.where({ name_in_github: reviewer }).findOne();
   if (!r) {
