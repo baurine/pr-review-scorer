@@ -1,0 +1,10 @@
+{
+  "name": "github-pr-review-score-calculator",
+  "runtime": "node/v18",
+  "region": "US",
+  "envs": [
+    "LarkBot",
+    "Enable"
+  ],
+  "typescript": true
+}
