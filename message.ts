@@ -118,9 +118,10 @@ class PullRequestHandlers {
     const title = `${getRepoName(
       repository
     )}: pull request labeled by ${getUserName(sender)}`;
+    const text = getPullRequestName(pull_request);
     const score = getTypeAndScore(pull_request);
 
-    return [title, score].join('\n');
+    return [title, text, score].join('\n');
   }
 
   reviewRequested(event: PullRequestReviewRequestedEvent) {

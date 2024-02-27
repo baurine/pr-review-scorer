@@ -33,7 +33,7 @@ async function initScores() {
         extra_score: 0,
       },
       {
-        name_in_github: 'bosn',
+        name_in_github: 'Bosn',
         name_in_company: 'Bosn Ma',
         init_score: 31.0,
         extra_score: 0,

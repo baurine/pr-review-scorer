@@ -38,10 +38,10 @@ export default async function (params: any, context: any) {
       const scoreMsg = await saveReview(params)
       if (scoreMsg !== '') {
         const {pull_request} = params
-        msg += `\n${getTypeAndScore(pull_request)}, ${scoreMsg}`
+        msg += `\n${getTypeAndScore(pull_request)}, **${scoreMsg}**`
 
         const scores = await listScores()
-        msg += `\n---\ncurrent scores: ${scores}` 
+        msg += `\n---\n**CURRENT SCORES**: ${scores}` 
       }
     }
     
