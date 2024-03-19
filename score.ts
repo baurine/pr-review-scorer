@@ -18,6 +18,7 @@ import {
   User,
 } from '@octokit/webhooks-types';
 import { getScore, getTypes } from './message';
+import { makeLarkSender } from './lark';
 
 export const scoresTable = aircode.db.table('scores');
 export const reviewsTable = aircode.db.table('reviews');
@@ -77,6 +78,20 @@ async function initScores() {
     ]);
   }
 }
+
+const larkBotUrl = process.env.LarkBot
+const larkBotSender = makeLarkSender(larkBotUrl!)
+
+export default async function (params: any, context: any) {
+  console.log('Received params:', params);
+
+  const msg = await listScores()
+  larkBotSender(msg)
+
+  return {
+    message: msg,
+  };
+};
 
 export async function listScores() {
   await initScores();
